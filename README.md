@@ -102,3 +102,4 @@ Edit `lib/models.ts` — add a new entry to the `MODELS` array following the exi
 ## License
 
 MIT
+# mental-model-hub
