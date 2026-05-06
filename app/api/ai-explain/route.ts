@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import Anthropic from '@anthropic-ai/sdk'
+import OpenAI from 'openai'
 import { MODELS } from '@/lib/models'
 
-const client = new Anthropic()
+const client = new OpenAI({
+  baseURL: 'https://integrate.api.nvidia.com/v1',
+  apiKey: process.env.NVIDIA_API_KEY,
+})
 
 const MODEL_LIST = MODELS.map(m => `${m.name} (${m.cat}): ${m.tagline}`).join('\n')
 
@@ -27,14 +30,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Input too long. Please keep it under 2000 characters.' }, { status: 400 })
     }
 
-    const message = await client.messages.create({
-      model: 'claude-sonnet-4-20250514',
+    const message = await client.chat.completions.create({
+      model: 'openai/gpt-oss-120b',
       max_tokens: 1024,
       system: SYSTEM_PROMPT,
       messages: [{ role: 'user', content: `Analyze this situation using the most relevant mental models:\n\n"${situation.trim()}"` }],
     })
 
-    const reply = message.content.find(b => b.type === 'text')?.text ?? ''
+    const reply = message.choices[0].message.content ?? ''
     return NextResponse.json({ reply })
   } catch (err) {
     console.error('AI explain error:', err)
