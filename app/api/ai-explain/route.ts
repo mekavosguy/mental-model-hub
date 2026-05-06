@@ -3,8 +3,8 @@ import OpenAI from 'openai'
 import { MODELS } from '@/lib/models'
 
 const client = new OpenAI({
-  baseURL: 'https://integrate.api.nvidia.com/v1',
-  apiKey: process.env.NVIDIA_API_KEY,
+  baseURL: "https://integrate.api.nvidia.com/v1",
+  apiKey: "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",
 })
 
 const MODEL_LIST = MODELS.map(m => `${m.name} (${m.cat}): ${m.tagline}`).join('\n')
